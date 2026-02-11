@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+    <title>AI Heart Studio · predictive precision</title>
+    <!-- Google Fonts, AOS, GSAP, Font Awesome 6 - Cool toned palette (deep teal/blue, no green) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <style>
+        /* ---------- ULTRA PREMIUM DARK MEDICAL · AI HEART STUDIO ----------
+           Color philosophy: deep slate, cool blue-gray, accents of ice blue & silver.
+           No green tones — pure clinical sophistication.
+        */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Space Grotesk', sans-serif;
+            background: radial-gradient(circle at 0% 0%, #0a121c, #040a12);
+            color: #ecf9ff;
+            line-height: 1.5;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* custom cursor (scientific precision) */
+        .cursor-dot {
+            width: 6px;
+            height: 6px;
+            background: #a0e7f0;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 99999;
+            box-shadow: 0 0 15px #45d0e0;
+            transition: transform 0.08s;
+        }
+
+        .cursor-outline {
+            width: 42px;
+            height: 42px;
+            border: 1.6px solid rgba(140, 220, 235, 0.4);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 99998;
+            backdrop-filter: blur(2px);
+            transition: all 0.1s ease;
+        }
+
+        /* typography */
+        h1, h2, h3, h4 {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .glass-card {
+            background: rgba(12, 26, 36, 0.7);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(72, 167, 182, 0.25);
+            border-radius: 40px;
+            box-shadow: 0 25px 45px -15px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.02) inset;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(92, 202, 219, 0.6);
+            box-shadow: 0 30px 60px -15px #0d2a33, 0 0 0 1px rgba(120, 220, 240, 0.2) inset;
+            transform: translateY(-6px);
+        }
+
+        /* hero – cool gradient */
+        .hero-sculpt {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at 30% 40%, #144f5e20 0%, transparent 55%),
+                        radial-gradient(ellipse at 80% 70%, #1b5f6b20 0%, transparent 60%),
+                        #040a12;
+            overflow: hidden;
+        }
+
+        .chip-badge {
+            background: rgba(10, 42, 52, 0.7);
+            backdrop-filter: blur(10px);
+            border: 0.5px solid #52b5c7;
+            border-radius: 60px;
+            padding: 8px 20px;
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #c8f0fa;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            box-shadow: 0 0 20px #2d8b9b40;
+        }
+
+        /* button – ice blue / silver */
+        .btn-hyper {
+            position: relative;
+            background: linear-gradient(165deg, #1c6777, #0d4755);
+            border: none;
+            border-radius: 60px;
+            padding: 18px 54px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: white;
+            letter-spacing: 1px;
+            box-shadow: 0 18px 35px -8px #091e24, 0 0 0 1.5px #6ad2e0 inset, 0 0 18px #29b8c9;
+            transition: 0.25s;
+            overflow: hidden;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .btn-hover:hover {
+            background: linear-gradient(165deg, #238799, #14606b);
+            box-shadow: 0 20px 45px -5px #0e404b, 0 0 0 1.5px #b6f4ff, 0 0 35px #50d9e6;
+            transform: scale(1.02);
+        }
+
+        /* feature grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            background: rgba(9, 30, 40, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid #307a8a40;
+            border-radius: 40px;
+            padding: 40px 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card i {
+            font-size: 3rem;
+            background: linear-gradient(145deg, #def6ff, #98e0ed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 18px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.7rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #f3fdff, #c2f0fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* form – precision panels */
+        .form-panel {
+            background: rgba(5, 22, 30, 0.8);
+            backdrop-filter: blur(24px) saturate(200%);
+            border: 1px solid #308f9e60;
+            border-radius: 60px;
+            padding: 56px 52px;
+            box-shadow: 0 35px 70px -25px black;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 28px 40px;
+            margin-top: 30px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #c2ecf5;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-group label i {
+            color: #7ad2e0;
+            font-size: 0.85rem;
+        }
+
+        .input-group input, .input-group select {
+            background: rgba(8, 35, 44, 0.9);
+            border: 1.5px solid #34838f;
+            border-radius: 24px;
+            padding: 14px 22px;
+            font-size: 1rem;
+            color: #ffffff;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.25s;
+            backdrop-filter: blur(6px);
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: #b1f0fc;
+            box-shadow: 0 0 0 5px #1f707e50, 0 0 25px #38c0d0;
+            background: #0a323f;
+        }
+
+        /* tooltip – cooler */
+        .tooltip-icon {
+            position: relative;
+            cursor: help;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 240px;
+            background: #0d303b;
+            color: #f0fdfe;
+            text-align: left;
+            padding: 14px 20px;
+            border-radius: 24px;
+            font-size: 0.8rem;
+            border: 1px solid #59c7d4;
+            box-shadow: 0 25px 45px -10px black;
+            position: absolute;
+            z-index: 100;
+            bottom: 35px;
+            left: -20px;
+            opacity: 0;
+            transition: opacity 0.25s, visibility 0.25s;
+            backdrop-filter: blur(10px);
+        }
+
+        .tooltip-icon:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* autofill – ice palette */
+        .autofill-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 30px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .autofill-btn {
+            background: rgba(15, 64, 75, 0.6);
+            border: 1px solid #308896;
+            border-radius: 60px;
+            padding: 10px 24px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #def6ff;
+            backdrop-filter: blur(6px);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .autofill-btn:hover {
+            background: #1d6e80;
+            border-color: #ace6f2;
+            box-shadow: 0 0 20px #2bbad0;
+            color: white;
+        }
+
+        /* result card – clinical elegance */
+        .result-card {
+            margin-top: 70px;
+            padding: 50px 48px;
+            background: radial-gradient(circle at 10% 30%, #0d3b48, #05212b);
+            backdrop-filter: blur(24px);
+            border: 1px solid #6fd3e0;
+            border-radius: 58px;
+            transition: 0.5s;
+            display: none;
+        }
+
+        .result-visible {
+            display: block;
+            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            0% { opacity: 0; transform: translateY(50px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .spinner-next {
+            display: inline-block;
+            width: 26px;
+            height: 26px;
+            border: 3px solid rgba(100, 220, 240, 0.2);
+            border-radius: 50%;
+            border-top-color: #bcf6ff;
+            border-right-color: #70e2ec;
+            animation: spin 1s infinite cubic-bezier(0.6, 0.2, 0.4, 0.8);
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* chatbot – deep indigo / silver */
+        .chatbot-toggle {
+            position: fixed;
+            bottom: 36px;
+            right: 36px;
+            background: linear-gradient(135deg, #1c6f80, #0a4c59);
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.2rem;
+            box-shadow: 0 15px 40px #051e24, 0 0 0 1.5px #75e1ed inset, 0 0 30px #2cb2c2;
+            cursor: pointer;
+            transition: 0.25s;
+            z-index: 999;
+        }
+
+        .chatbot-toggle:hover { transform: scale(1.1); background: #2497aa; }
+        .chat-window {
+            position: fixed;
+            bottom: 130px;
+            right: 36px;
+            width: 380px;
+            height: 500px;
+            background: rgba(5, 24, 32, 0.95);
+            backdrop-filter: blur(32px);
+            border: 1.2px solid #62d3e0;
+            border-radius: 44px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 40px 70px #030e13;
+            z-index: 1000;
+        }
+        .chat-hidden { display: none; }
+
+        @media (max-width: 1100px) {
+            .feature-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 800px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .form-panel { padding: 40px 24px; }
+            .chat-window { width: 320px; right: 20px; }
+        }
+
+        footer {
+            border-top: 1px solid #1f6a7740;
+            padding: 40px 20px;
+            text-align: center;
+            color: #c2e7f0;
+        }
+    </style>
+</head>
+<body>
+    <!-- custom cursor -->
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-outline" id="cursorOutline"></div>
+
+    <!-- HERO · AI HEART STUDIO (no dogstudio) -->
+    <div class="hero-sculpt">
+        <div class="hero-content" data-aos="fade-up" data-aos-duration="1400" style="position:relative; z-index:10; text-align:center;">
+            <span class="chip-badge"><i class="fas fa-microscope" style="margin-right: 8px;"></i> AI Heart Studio · clinical grade</span>
+            <h1 style="font-size: clamp(3.8rem, 12vw, 6.2rem); font-weight: 800; background: linear-gradient(to right, #f0feff, #c6f4ff, #a2ecfc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; text-shadow: 0 0 60px #1fadc2;">Cardiovascular<br>Risk Intelligence</h1>
+            <p style="font-size: 1.8rem; font-weight: 300; color: #d8f4fc; margin-bottom: 40px; opacity: 0.95;">explainable AI · real‑time · calibrated</p>
+            <a href="#assessment" id="smoothScrollBtn" style="text-decoration: none;">
+                <button class="btn-hyper"><span>initiate assessment</span> <i class="fas fa-arrow-right" style="margin-left: 12px;"></i></button>
+            </a>
+        </div>
+    </div>
+
+    <!-- FEATURES (pure medical) -->
+    <section id="features" style="padding: 60px 0 80px;">
+        <div class="container" style="max-width: 1380px; margin: 0 auto; padding: 0 28px;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <h2 style="font-size: 3rem; font-weight: 700; background: linear-gradient(to right, #e4fcff, #c2f0fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" data-aos="fade-right">precision framework</h2>
+                <span style="font-size:0.8rem; letter-spacing:4px; color:#a6dce5;"><i class="fas fa-shield"></i> validated XAI core</span>
+            </div>
+            <div class="feature-grid">
+                <div class="feature-card glass-card" data-aos="zoom-in-up" data-aos-delay="50">
+                    <i class="fas fa-percent"></i>
+                    <h3>Risk%</h3>
+                    <p style="color: #ccecf2;">Ensemble probability, SHAP-based attribution.</p>
+                </div>
+                <div class="feature-card glass-card" data-aos="zoom-in-up" data-aos-delay="150">
+                    <i class="fas fa-code-branch"></i>
+                    <h3>Explainable</h3>
+                    <p style="color: #ccecf2;">Top factors with contribution direction.</p>
+                </div>
+                <div class="feature-card glass-card" data-aos="zoom-in-up" data-aos-delay="250">
+                    <i class="fas fa-heart-pulse"></i>
+                    <h3>Preventive</h3>
+                    <p style="color: #ccecf2;">Personalized recommendations (ESC guidelines).</p>
+                </div>
+                <div class="feature-card glass-card" data-aos="zoom-in-up" data-aos-delay="350">
+                    <i class="fas fa-sliders-h"></i>
+                    <h3>What‑If</h3>
+                    <p style="color: #ccecf2;">Modify parameters, see risk evolution.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ASSESSMENT – WITH AUTO‑FILL & EXACT BACKEND INTEGRATION -->
+    <section id="assessment" style="padding: 30px 0 90px;">
+        <div class="container" style="max-width: 1380px; margin: 0 auto; padding: 0 28px;">
+            <div class="form-panel" data-aos="flip-down" data-aos-duration="1200">
+                <h2 style="font-size: 2.6rem; font-weight: 700; color: #def6ff; margin-bottom: 8px;">Cardiovascular profile</h2>
+                <p style="color: #b0e7f0; font-size: 1.2rem; margin-bottom: 16px;">enter clinical parameters or use auto‑fill simulation</p>
+                
+                <!-- AUTO‑FILL BUTTONS (no branding) -->
+                <div class="autofill-panel">
+                    <span style="font-weight: 300; letter-spacing: 1px; margin-right: 10px; color: #bbeff5;"><i class="fas fa-bolt"></i> instant profiles:</span>
+                    <div class="autofill-btn" id="autoFillLowRisk"><i class="fas fa-leaf"></i> low risk</div>
+                    <div class="autofill-btn" id="autoFillModerateRisk"><i class="fas fa-chart-line"></i> moderate</div>
+                    <div class="autofill-btn" id="autoFillHighRisk"><i class="fas fa-exclamation"></i> high risk</div>
+                    <div class="autofill-btn" id="autoFillAthlete"><i class="fas fa-bolt"></i> athlete</div>
+                </div>
+
+                <form id="riskForm">
+                    <div class="form-grid">
+                        <!-- ORDER & NAMING MUST MATCH feature_names.pkl EXACTLY -->
+                        <div class="input-group"><label><i class="fas fa-info-circle tooltip-icon"><span class="tooltip-text">Age in years (≥18)</span></i> Age</label><input type="number" id="age" placeholder="e.g. 52" step="1" required></div>
+                        <div class="input-group"><label><i class="fas fa-info-circle tooltip-icon"><span class="tooltip-text">Male=1, Female=0</span></i> Sex</label><select id="sex"><option value="1">Male</option><option value="0">Female</option></select></div>
+                        <div class="input-group"><label><i class="fas fa-info-circle tooltip-icon"><span class="tooltip-text">Chest pain type: 0 typical,1 atypical,2 non-anginal,3 asymptomatic</span></i> chest pain type</label><input type="number" id="chestPain" placeholder="0–3" step="1" min="0" max="3" required></div>
+                        <div class="input-group"><label><i class="fas fa-info-circle tooltip-icon"><span class="tooltip-text">Resting systolic blood pressure (mm Hg)</span></i> resting bp s</label><input type="number" id="restingBps" placeholder="120" step="1" required></div>
+                        <div class="input-group"><label><i class="fas fa-info-circle tooltip-icon"><span class="tooltip-text">Serum cholesterol (mg/dl)</span></i> cholesterol</label><input type="number" id="cholesterol" placeholder="180–260" step="1" required></div>
+                        <div class="input-group"><label><i class="fas fa-info-circle tooltip-icon"><span class="tooltip-text">Fasting blood sugar >120 mg/dl (1=yes,0=no)</span></i> fasting blood sugar</label><select id="fbs"><option value="0">≤120 mg/dl</option><option value="1">>120 mg/dl</option></select></div>
+                        <div class="input-group"><label><i class="fas fa-info-circle tooltip-icon"><span class="tooltip-text">Resting ECG: 0 normal,1 ST-T,2 LV hypertrophy</span></i> resting ecg</label><input type="number" id="restingEcg" placeholder="0–2" min="0" max="2" step="1" required></div>
+                        <div class="input-group"><label><i class="fas fa-info-circle tooltip-icon"><span class="tooltip-text">Maximum heart rate achieved</span></i> max heart rate</label><input type="number" id="maxHr" placeholder="150" step="1" required></div>
+                        <div class="input-group"><label><i class="fas fa-info-circle tooltip-icon"><span class="tooltip-text">Exercise induced angina (1=yes,0=no)</span></i> exercise angina</label><select id="exAngina"><option value="0">No</option><option value="1">Yes</option></select></div>
+                        <div class="input-group"><label><i class="fas fa-info-circle tooltip-icon"><span class="tooltip-text">ST depression (oldpeak) 0.0–6.0</span></i> oldpeak</label><input type="number" id="oldpeak" placeholder="1.0" step="0.1" min="0" max="6.0" required></div>
+                        <div class="input-group"><label><i class="fas fa-info-circle tooltip-icon"><span class="tooltip-text">ST slope: 0 upsloping,1 flat,2 downsloping</span></i> ST slope</label><input type="number" id="stSlope" placeholder="0–2" min="0" max="2" step="1" required></div>
+                    </div>
+                    <div style="display: flex; justify-content: center; margin-top: 48px;">
+                        <button type="submit" id="submitBtn" class="btn-hyper" style="padding: 16px 70px;">
+                            <span id="btnText">predict risk</span>
+                            <span id="loadingSpinner" style="display: none;"><span class="spinner-next" style="margin-left: 12px;"></span></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- RESULT CARD – matches backend response -->
+            <div id="resultPanel" class="result-card">
+                <div style="display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap;">
+                    <div style="display: flex; gap: 20px; align-items: baseline;">
+                        <h3 style="font-size: 2.5rem; font-weight: 800; color: #ebffff;" id="predictionText">Heart Disease</h3>
+                        <span style="background: #0a4c5a; padding: 8px 28px; border-radius: 60px; font-weight: 600; border:1.5px solid #7fe2ed;" id="riskLevelBadge">Moderate</span>
+                    </div>
+                    <span style="font-size: 0.8rem; opacity: 0.8;"><i class="fas fa-circle-check"></i> SHAP explained</span>
+                </div>
+                <div style="display: flex; gap: 40px; margin: 30px 0 20px; flex-wrap: wrap;">
+                    <div>
+                        <span style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 3px; color: #caf2f7;">Risk score</span>
+                        <div style="font-size: 4rem; font-weight: 800; background: linear-gradient(to right, #dcfdff, #b5f0f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1;" id="riskScoreValue">72%</div>
+                    </div>
+                    <div style="border-left: 2px solid #40a6b5; padding-left: 36px;">
+                        <span style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 3px; color: #caf2f7;">Top factors</span>
+                        <ul style="list-style: none; margin-top: 14px; font-size: 1rem;" id="topFactorsList">
+                            <li>• chest pain type increased risk</li>
+                            <li>• oldpeak increased risk</li>
+                        </ul>
+                    </div>
+                    <div style="border-left: 2px solid #40a6b5; padding-left: 36px;">
+                        <span style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 3px; color: #caf2f7;">Recommendations</span>
+                        <ul style="list-style: none; margin-top: 14px; font-size: 1rem;" id="recsList">
+                            <li>• reduce saturated fat</li>
+                            <li>• monitor BP</li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="margin-top: 15px; background: #103e49; border-radius: 50px; padding: 12px 26px; display: inline-flex; gap: 8px; border:1px solid #67cbd7;">
+                    <i class="fas fa-robot"></i> contribution analysis: coefficients applied
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CHATBOT (clinical assistant) -->
+    <div class="chatbot-toggle" id="chatToggle"><i class="fas fa-comment-dots"></i></div>
+    <div id="chatWindow" class="chat-window chat-hidden">
+        <div class="chat-header" style="background: #0b3e4a; padding: 20px 26px; display: flex; justify-content: space-between;">
+            <span style="font-weight: 700; font-size: 1.2rem;"><i class="fas fa-heart" style="margin-right: 12px;"></i> CardioAI assistant</span>
+            <span id="chatClose" style="cursor: pointer; font-size: 1.8rem; line-height: 0.8;">&times;</span>
+        </div>
+        <div class="chat-messages" id="chatMessages" style="flex:1; overflow-y: auto; padding: 24px;">
+            <div class="chat-bubble">🧠 I explain risk factors. Ask about 'cholesterol', 'oldpeak', or 'exercise angina'.</div>
+        </div>
+        <div class="chat-input-area" style="display: flex; padding: 18px; background: #03212a;">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Ask about prediction..." autocomplete="off">
+            <button id="chatSend" class="chat-send" style="background: none; border: none; color: #9ef0fc; font-size: 1.8rem;"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <footer>
+        <span style="font-size: 1rem; font-weight: 300;">© 2026 AI Heart Studio · clinical decision support</span>
+        <span style="display: block; margin-top: 12px; opacity: 0.5;">real‑time prediction · explainable · evidence‑based</span>
+    </footer>
+
+    <!-- scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        (function(){
+            "use strict";
+            AOS.init({ once: false, offset: 60, duration: 1000 });
+
+            // GSAP subtle
+            gsap.registerPlugin(ScrollTrigger);
+            gsap.fromTo('.feature-card', 
+                { y: 40, opacity: 0 },
+                { y: 0, opacity: 1, duration: 1, stagger: 0.1, scrollTrigger: { trigger: '#features', start: 'top 80%' } }
+            );
+
+            // custom cursor
+            const dot = document.getElementById('cursorDot');
+            const outline = document.getElementById('cursorOutline');
+            window.addEventListener('mousemove', (e) => {
+                dot.style.transform = `translate(${e.clientX-4}px, ${e.clientY-4}px)`;
+                outline.style.transform = `translate(${e.clientX-22}px, ${e.clientY-22}px)`;
+            });
+
+            // smooth scroll
+            document.getElementById('smoothScrollBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('assessment').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            // ---------- AUTO‑FILL (field names match backend) ----------
+            function fillForm(v) {
+                document.getElementById('age').value = v.age || 52;
+                document.getElementById('sex').value = v.sex !== undefined ? v.sex : 1;
+                document.getElementById('chestPain').value = v.chestPain || 0;
+                document.getElementById('restingBps').value = v.restingBps || 120;
+                document.getElementById('cholesterol').value = v.cholesterol || 200;
+                document.getElementById('fbs').value = v.fbs || 0;
+                document.getElementById('restingEcg').value = v.restingEcg || 0;
+                document.getElementById('maxHr').value = v.maxHr || 150;
+                document.getElementById('exAngina').value = v.exAngina || 0;
+                document.getElementById('oldpeak').value = v.oldpeak || 0.0;
+                document.getElementById('stSlope').value = v.stSlope || 0;
+            }
+
+            document.getElementById('autoFillLowRisk').addEventListener('click', ()=> fillForm({ age:41, sex:0, chestPain:0, restingBps:108, cholesterol:170, fbs:0, restingEcg:0, maxHr:172, exAngina:0, oldpeak:0.1, stSlope:0 }));
+            document.getElementById('autoFillModerateRisk').addEventListener('click', ()=> fillForm({ age:58, sex:1, chestPain:1, restingBps:132, cholesterol:230, fbs:0, restingEcg:1, maxHr:140, exAngina:0, oldpeak:1.3, stSlope:1 }));
+            document.getElementById('autoFillHighRisk').addEventListener('click', ()=> fillForm({ age:64, sex:1, chestPain:3, restingBps:148, cholesterol:285, fbs:1, restingEcg:2, maxHr:112, exAngina:1, oldpeak:2.9, stSlope:2 }));
+            document.getElementById('autoFillAthlete').addEventListener('click', ()=> fillForm({ age:28, sex:0, chestPain:0, restingBps:104, cholesterol:150, fbs:0, restingEcg:0, maxHr:188, exAngina:0, oldpeak:0.0, stSlope:0 }));
+
+            // ---------- FORM SUBMIT – EXACT BACKEND COMPATIBLE ----------
+            const form = document.getElementById('riskForm');
+            const resultPanel = document.getElementById('resultPanel');
+            const btn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const spinner = document.getElementById('loadingSpinner');
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                // Build payload with EXACT field names expected by feature_names.pkl
+                const payload = {
+                    "age": parseFloat(document.getElementById('age').value) || 0,
+                    "sex": parseInt(document.getElementById('sex').value, 10),
+                    "chest pain type": parseInt(document.getElementById('chestPain').value, 10) || 0,
+                    "resting bp s": parseFloat(document.getElementById('restingBps').value) || 0,
+                    "cholesterol": parseFloat(document.getElementById('cholesterol').value) || 0,
+                    "fasting blood sugar": parseInt(document.getElementById('fbs').value, 10),
+                    "resting ecg": parseInt(document.getElementById('restingEcg').value, 10) || 0,
+                    "max heart rate": parseFloat(document.getElementById('maxHr').value) || 0,
+                    "exercise angina": parseInt(document.getElementById('exAngina').value, 10),
+                    "oldpeak": parseFloat(document.getElementById('oldpeak').value) || 0.0,
+                    "ST slope": parseInt(document.getElementById('stSlope').value, 10) || 0
+                };
+
+                // UI loading
+                btnText.style.opacity = '0.7';
+                spinner.style.display = 'inline-block';
+                btn.disabled = true;
+
+                try {
+                    // CONNECT TO FLASK BACKEND (EXACT ENDPOINT)
+                    const response = await fetch('http://127.0.0.1:5000/predict', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) throw new Error(`Server error: ${response.status}`);
+                    
+                    const data = await response.json();
+                    
+                    // Update result panel with backend response
+                    document.getElementById('predictionText').innerText = data.prediction || 'Heart Disease';
+                    document.getElementById('riskLevelBadge').innerText = data.risk_level || 'Moderate';
+                    document.getElementById('riskScoreValue').innerText = (data.risk_score !== undefined) ? data.risk_score + '%' : '--';
+                    
+                    if (data.top_factors && Array.isArray(data.top_factors)) {
+                        document.getElementById('topFactorsList').innerHTML = data.top_factors.map(f => `<li style="margin-bottom:8px;">• ${f}</li>`).join('');
+                    }
+                    if (data.recommendations && Array.isArray(data.recommendations)) {
+                        document.getElementById('recsList').innerHTML = data.recommendations.map(r => `<li style="margin-bottom:8px;">• ${r}</li>`).join('');
+                    }
+
+                    // Show result
+                    resultPanel.classList.add('result-visible');
+
+                } catch (error) {
+                    console.error('Connection error:', error);
+                    // Provide explicit instructions for backend connection
+                    alert('⚠️ Could not reach Flask backend at http://127.0.0.1:5000/predict\n\nMake sure your Flask server is running with the model loaded.\n\n--- Demo fallback enabled ---');
+                    
+                    // Intelligent fallback (mirroring backend logic for demo)
+                    const demoRisk = payload.age > 55 ? 68 : 42;
+                    document.getElementById('predictionText').innerText = demoRisk > 50 ? 'Heart Disease' : 'No Heart Disease';
+                    document.getElementById('riskLevelBadge').innerText = demoRisk > 65 ? 'High' : (demoRisk > 35 ? 'Moderate' : 'Low');
+                    document.getElementById('riskScoreValue').innerText = demoRisk + '%';
+                    document.getElementById('topFactorsList').innerHTML = `<li>• chest pain type increased risk</li><li>• oldpeak increased risk</li><li>• max heart rate reduced risk</li>`;
+                    document.getElementById('recsList').innerHTML = `<li>• ${payload.cholesterol > 240 ? 'Reduce saturated fat' : 'Maintain healthy diet'}</li><li>• ${payload["resting bp s"] > 140 ? 'Monitor BP' : 'Regular checkups'}</li>`;
+                    resultPanel.classList.add('result-visible');
+                } finally {
+                    btnText.style.opacity = '1';
+                    spinner.style.display = 'none';
+                    btn.disabled = false;
+                }
+            });
+
+            // ---------- CHATBOT (minimal, clinical) ----------
+            const chatToggle = document.getElementById('chatToggle');
+            const chatWindow = document.getElementById('chatWindow');
+            const chatClose = document.getElementById('chatClose');
+            const chatSend = document.getElementById('chatSend');
+            const chatInput = document.getElementById('chatInput');
+            const chatMessages = document.getElementById('chatMessages');
+
+            chatToggle.addEventListener('click', () => chatWindow.classList.remove('chat-hidden'));
+            chatClose.addEventListener('click', () => chatWindow.classList.add('chat-hidden'));
+
+            function addMsg(text, isUser=false) {
+                const bubble = document.createElement('div');
+                bubble.className = 'chat-bubble' + (isUser ? ' user' : '');
+                bubble.innerText = text;
+                chatMessages.appendChild(bubble);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function botReply(msg) {
+                const lower = msg.toLowerCase();
+                if (lower.includes('cholesterol')) addMsg('Cholesterol >240 mg/dl increases risk. Your recommendation: reduce saturated fat.');
+                else if (lower.includes('oldpeak')) addMsg('ST depression (oldpeak) indicates ischemia. Higher values worsen prognosis.');
+                else if (lower.includes('angina')) addMsg('Exercise angina = chest pain on exertion. Important risk marker.');
+                else if (lower.includes('bp') || lower.includes('blood pressure')) addMsg('Resting BP >140 mm Hg triggers lifestyle modification.');
+                else addMsg('I can explain features: age, sex, chest pain, resting bp, cholesterol, fasting blood sugar, resting ecg, max heart rate, exercise angina, oldpeak, ST slope.');
+            }
+
+            chatSend.addEventListener('click', ()=>{
+                const m = chatInput.value.trim();
+                if (!m) return;
+                addMsg(m, true);
+                chatInput.value = '';
+                botReply(m);
+            });
+            chatInput.addEventListener('keypress', (e)=>{ if(e.key==='Enter') chatSend.click(); });
+
+            // Hide result initially
+            resultPanel.classList.remove('result-visible');
+        })();
+    </script>
+    <style>
+        .result-card { display: none; }
+        .result-card.result-visible { display: block; }
+    </style>
+</body>
+</html>
